@@ -1,0 +1,61 @@
+#include <stdio.h>
+
+int main() {
+    int n, i, j, sum, target_sum;
+    int set[100], included[100];
+
+    // Input the number of elements in the set
+    printf("Enter the number of elements in the set: ");
+    scanf("%d", &n);
+
+    // Input the elements of the set
+    printf("Enter the elements of the set: ");
+    for (i = 0; i < n; i++) {
+        scanf("%d", &set[i]);
+    }
+
+    // Input the target sum
+    printf("Enter the target sum: ");
+    scanf("%d", &target_sum);
+
+    // Initialize the included array to keep track of the current subset
+    for (i = 0; i < n; i++) {
+        included[i] = 0;  // Initially, no elements are included
+    }
+
+    // Backtracking approach to find all subsets that sum to target_sum
+    sum = 0; // Current sum starts at 0
+    i = 0;   // Start from the first element
+
+    while (i >= 0) {
+        // If the current index is valid and not included yet
+        if (i < n && included[i] == 0) {
+            sum += set[i];      // Include the current element in the sum
+            included[i] = 1;    // Mark it as included
+
+            // If the current sum equals the target sum, print the subset
+            if (sum == target_sum) {
+                printf("{ ");
+                for (j = 0; j < n; j++) {
+                    if (included[j]) {
+                        printf("%d ", set[j]);
+                    }
+                }
+                printf("}\n");
+            }
+
+            // Move to the next element
+            i++;
+        } 
+        else {
+            // Backtrack: remove the last included element
+            if (i >= 0) {
+                sum -= set[i - 1]; // Remove the last element added to sum
+                included[i - 1] = 0; // Mark it as not included
+            }
+            i--; // Go to the previous index
+        }
+    }
+
+    return 0;
+}

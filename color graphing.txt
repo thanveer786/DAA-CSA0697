@@ -1,0 +1,72 @@
+#include <stdio.h>
+
+#define V 5  // Number of vertices in the graph
+
+int main() {
+    // Adjacency matrix representation of the graph
+    int graph[V][V] = {
+        {0, 1, 1, 1, 0},
+        {1, 0, 0, 1, 1},
+        {1, 0, 0, 1, 0},
+        {1, 1, 1, 0, 1},
+        {0, 1, 0, 1, 0}
+    };
+
+    int m; 
+	int i,c; // Number of colors
+    printf("Enter the number of colors: ");
+    scanf("%d", &m);
+
+    int color[V];  // Array to store colors assigned to vertices
+
+    // Initialize all vertices as uncolored
+    for ( i = 0; i < V; i++) {
+        color[i] = -1;  // -1 indicates no color assigned
+    }
+
+    // Backtracking variables
+    int vertex = 0;  // Start with the first vertex
+    while (vertex >= 0) {
+        // If all vertices are assigned a color, we have a solution
+        if (vertex == V) {
+            printf("A solution is found with colors: ");
+            for ( i = 0; i < V; i++) {
+                printf("%d ", color[i]);
+            }
+            printf("\n");
+            vertex--;  // Backtrack to find other solutions
+            continue;
+        }
+
+        // Try different colors for the current vertex
+        int found = 0;  // Flag to check if a valid color is found
+        for ( c = 0; c < m; c++) {  // Try colors from 0 to m-1
+            // Check if it's safe to assign color c to vertex
+            int safe = 1;  // Assume the color is safe
+            for (i = 0; i < V; i++) {
+                // Check adjacent vertices
+                if (graph[vertex][i] == 1 && color[i] == c) {
+                    safe = 0;  // Not safe if adjacent vertex has the same color
+                    break;
+                }
+            }
+
+            // If the color is safe, assign it
+            if (safe) {
+                color[vertex] = c;  // Assign color c to vertex
+                found = 1;          // A valid color was found
+                vertex++;           // Move to the next vertex
+                break;              // Break to try the next vertex
+            }
+        }
+
+        // If no color can be assigned, backtrack
+        if (!found) {
+            color[vertex] = -1;  // Reset color for the current vertex
+            vertex--;             // Backtrack to the previous vertex
+        }
+        
+    }
+    
+    return 0;  // End of the program
+}

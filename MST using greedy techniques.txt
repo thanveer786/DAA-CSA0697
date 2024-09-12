@@ -1,0 +1,71 @@
+#include <stdio.h>
+#include <stdbool.h>
+
+#define MAX 100
+#define INF 99999999
+
+int main() {
+    int n,i,j,count,v; // Number of vertices
+    int graph[MAX][MAX]; // Adjacency matrix to represent the graph
+    int parent[MAX]; // Array to store the constructed MST
+    int key[MAX]; // Key values used to pick the minimum weight edge
+    bool mstSet[MAX]; // Array to track vertices included in MST
+
+    // Input the number of vertices
+    printf("Enter the number of vertices: ");
+    scanf("%d", &n);
+
+    // Input the graph as an adjacency matrix
+    printf("Enter the adjacency matrix (enter 0 if there is no edge):\n");
+    for ( i = 0; i < n; i++) {
+        for ( j = 0; j < n; j++) {
+            scanf("%d", &graph[i][j]);
+            if (graph[i][j] == 0) {
+                graph[i][j] = INF; // No edge
+            }
+        }
+    }
+
+    // Initialize all keys as infinite and mstSet as false
+    for (i = 0; i < n; i++) {
+        key[i] = INF;
+        mstSet[i] = false;
+        parent[i] = -1; // Initialize parent array
+    }
+
+    // Start with the first vertex
+    key[0] = 0; // Make the first vertex as the root
+
+    // The MST will have n vertices
+    for ( count = 0; count < n - 1; count++) {
+        // Find the vertex with the minimum key value
+        int minKey = INF;
+        int minIndex;
+
+        for (v = 0; v < n; v++) {
+            if (mstSet[v] == false && key[v] < minKey) {
+                minKey = key[v];
+                minIndex = v;
+            }
+        }
+
+        // Add the chosen vertex to the MST set
+        mstSet[minIndex] = true;
+
+        // Update the key value and parent index of the adjacent vertices
+        for ( v = 0; v < n; v++) {
+            if (graph[minIndex][v] && mstSet[v] == false && graph[minIndex][v] < key[v]) {
+                parent[v] = minIndex;
+                key[v] = graph[minIndex][v];
+            }
+        }
+    }
+
+    // Print the constructed MST
+    printf("Edge\tWeight\n");
+    for (i = 1; i < n; i++) {
+        printf("%d - %d\t%d\n", parent[i], i, graph[i][parent[i]]);
+    }
+
+    return 0;
+}

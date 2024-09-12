@@ -1,0 +1,32 @@
+#include <stdio.h>
+
+#define MAX 100
+
+int main() {
+    int n, k,i,j;
+    int binomial[MAX][MAX]; // Table to store binomial coefficients
+
+    // Input values for n and k
+    printf("Enter n (number of items): ");
+    scanf("%d", &n);
+    printf("Enter k (number of choices): ");
+    scanf("%d", &k);
+
+    // Initialize the table
+    for ( i = 0; i <= n; i++) {
+        for ( j = 0; j <= i; j++) {
+            // Base cases
+            if (j == 0 || j == i) {
+                binomial[i][j] = 1; // C(n, 0) = C(n, n) = 1
+            } else {
+                // Recurrence relation
+                binomial[i][j] = binomial[i - 1][j - 1] + binomial[i - 1][j];
+            }
+        }
+    }
+
+    // Print the result
+    printf("Binomial Coefficient C(%d, %d) = %d\n", n, k, binomial[n][k]);
+
+    return 0;
+}

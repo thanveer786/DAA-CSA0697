@@ -1,0 +1,63 @@
+#include <stdio.h>
+
+int main() {
+    int n,i,j; // Number of items
+    int capacity; // Maximum weight capacity of the knapsack
+    int value[100], weight[100]; // Arrays to hold values and weights
+    double ratio[100]; // Array to hold value-to-weight ratios
+
+    // Input the number of items and the capacity of the knapsack
+    printf("Enter the number of items: ");
+    scanf("%d", &n);
+    printf("Enter the capacity of the knapsack: ");
+    scanf("%d", &capacity);
+
+    // Input the value and weight of each item
+    for ( i = 0; i < n; i++) {
+        printf("Enter value and weight for item %d: ", i + 1);
+        scanf("%d %d", &value[i], &weight[i]);
+        // Calculate the value-to-weight ratio
+        ratio[i] = (double)value[i] / weight[i];
+    }
+
+    // Sort items based on their value-to-weight ratio (simple selection sort)
+    for (i = 0; i < n - 1; i++) {
+        for ( j = i + 1; j < n; j++) {
+            if (ratio[i] < ratio[j]) {
+                // Swap ratios
+                double tempRatio = ratio[i];
+                ratio[i] = ratio[j];
+                ratio[j] = tempRatio;
+
+                // Swap values
+                int tempValue = value[i];
+                value[i] = value[j];
+                value[j] = tempValue;
+
+                // Swap weights
+                int tempWeight = weight[i];
+                weight[i] = weight[j];
+                weight[j] = tempWeight;
+            }
+        }
+    }
+
+    // Calculate the maximum value in the knapsack
+    double totalValue = 0.0;
+    for (i = 0; i < n; i++) {
+        if (weight[i] <= capacity) {
+            // If the item can be added in full
+            capacity -= weight[i];
+            totalValue += value[i];
+        } else {
+            // If the item can't be added in full, add a fraction
+            totalValue += value[i] * ((double)capacity / weight[i]);
+            break; // Knapsack is full
+        }
+    }
+
+    // Print the result
+    printf("Maximum value in the knapsack: %.2f\n", totalValue);
+
+    return 0; // Return success
+}
